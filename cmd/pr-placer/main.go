@@ -13,10 +13,10 @@ type work struct {
 
 func main() {
 	prompt := promptui.Select{
-		Label: "What type of work is this?",
+		Label: "Who can notice the change?",
 		Items: []string{
-			"Something that end users can experience (e.g. a visual change to an interface, or a new field in an API)",
-			"Something internal (documentation, refactoring, linting, CI, performance improvements etc.)",
+			"Users (bugs, features, performance)",
+			"Just us (docs, ci, code style)",
 		},
 	}
 
