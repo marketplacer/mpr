@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/manifoldco/promptui"
 	"github.com/tcnksm/go-input"
 	"log"
@@ -119,6 +121,91 @@ func getTitle() string {
 	return name
 }
 
+func getDescription() string {
+	text := ""
+	prompt := &survey.Multiline{
+		Message: "Now some detail. What's the change do? Why is it being done?",
+	}
+	survey.AskOne(prompt, &text)
+
+	return text
+}
+
+func checkQaRequired() bool {
+	prompt := promptui.Select{
+		Label: "Does this work require QA?",
+		Items: []string{
+			"No",
+			"Yes",
+		},
+	}
+
+	i, _, err := prompt.Run()
+
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	return i == 1
+}
+
+func getReproductionSteps() []string {
+	fmt.Println("What are the steps to see this working? Submit a blank step to finish.")
+
+	var steps []string
+	i := 0
+
+	for {
+		step := ""
+		prompt := &survey.Input{
+			Message: fmt.Sprintf("Step %d", i+1),
+		}
+		survey.AskOne(prompt, &step)
+		if step == "" {
+			break
+		}
+
+		i++
+		steps = append(steps, step)
+	}
+
+	return steps
+}
+
+func getEnvironmentUrl() string {
+	url := ""
+	prompt := &survey.Input{
+		Message: "URL where the change can be tested",
+	}
+	survey.AskOne(prompt, &url)
+
+	return url
+}
+
+func getResolvedTickets() []string {
+	fmt.Println("Paste any ticket URLs that this resolves (FULL URLs)")
+
+	var urls []string
+	i := 0
+
+	for {
+		url := ""
+		prompt := &survey.Input{
+			Message: "Ticket URL",
+		}
+		survey.AskOne(prompt, &url)
+		if url == "" {
+			break
+		}
+
+		i++
+		urls = append(urls, url)
+	}
+
+	return urls
+}
+
 func main() {
 	changeType := getChangeType()
 
@@ -130,7 +217,26 @@ func main() {
 		conventionalType = getInternalChangeType()
 	}
 
-	log.Printf("%s\n", conventionalType)
-
 	getTitle()
+	getDescription()
+
+	qaRequired := true
+	if conventionalType != "feat" && conventionalType != "fix" {
+		qaRequired = checkQaRequired()
+	}
+
+	reproductionSteps := []string{}
+	var url string
+
+	if qaRequired {
+		reproductionSteps = getReproductionSteps()
+		url = getEnvironmentUrl()
+	}
+
+	ticketUrls := getResolvedTickets()
+
+	log.Printf("Type: %s\n", conventionalType)
+	log.Printf("%v", reproductionSteps)
+	log.Printf("%v", url)
+	log.Printf("%v", ticketUrls)
 }
