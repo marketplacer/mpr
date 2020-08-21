@@ -261,10 +261,5 @@ func main() {
 
 	ticketUrls := getResolvedTickets()
 
-	log.Printf("Type: %s\n", conventionalType)
-	log.Printf("%v", reproductionSteps)
-	log.Printf("%v", url)
-	log.Printf("%v", ticketUrls)
-
 	formatPr(conventionalType, title, description, reproductionSteps, url, ticketUrls)
 }
