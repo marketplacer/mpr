@@ -219,7 +219,9 @@ func formatPr(conventionalType string, title string, description string, reprodu
 		fmt.Println()
 	}
 
-	fmt.Printf("Deployed to: %s\n", url)
+	if len(url) > 0 {
+		fmt.Printf("Deployed to: %s\n", url)
+	}
 
 	if len(ticketUrls) > 0 {
 		for _, ticketURL := range ticketUrls {
