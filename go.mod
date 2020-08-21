@@ -1,4 +1,4 @@
-module github.com/marketplacer/pr-placer
+module github.com/marketplacer/mpr
 
 go 1.14
 
