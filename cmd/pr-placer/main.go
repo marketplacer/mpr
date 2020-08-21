@@ -173,7 +173,7 @@ func getReproductionSteps() []string {
 	return steps
 }
 
-func getEnvironmentUrl() string {
+func getEnvironmentURL() string {
 	url := ""
 	prompt := &survey.Input{
 		Message: "URL where the change can be tested",
@@ -206,6 +206,38 @@ func getResolvedTickets() []string {
 	return urls
 }
 
+func formatPr(conventionalType string, title string, description string, reproductionSteps []string, url string, ticketUrls []string) {
+	fmt.Println("Okay, go to the page where you enter your PR details, then press enter here")
+	fmt.Scanln()
+
+	fmt.Printf("Here's your PR title. Copy it over, then press enter here\n\n")
+	fmt.Printf("%s: %s\n\n", conventionalType, title)
+	fmt.Scanln()
+
+	fmt.Printf("Here's your PR body. Copy it over, add any extra detail you'd like over in GitHub\n\n")
+	fmt.Printf("%s\n\n", description)
+
+	if len(reproductionSteps) > 0 {
+
+		fmt.Printf("**Steps to test this is working**\n\n")
+		for i, step := range reproductionSteps {
+			fmt.Printf("%d. %s\n", i+1, step)
+		}
+
+		fmt.Println()
+	}
+
+	fmt.Printf("Deployed to: %s\n", url)
+
+	if len(ticketUrls) > 0 {
+		for _, ticketURL := range ticketUrls {
+			fmt.Printf("Resolves %s\n", ticketURL)
+		}
+
+		fmt.Println()
+	}
+}
+
 func main() {
 	changeType := getChangeType()
 
@@ -217,8 +249,8 @@ func main() {
 		conventionalType = getInternalChangeType()
 	}
 
-	getTitle()
-	getDescription()
+	title := getTitle()
+	description := getDescription()
 
 	qaRequired := true
 	if conventionalType != "feat" && conventionalType != "fix" {
@@ -230,7 +262,7 @@ func main() {
 
 	if qaRequired {
 		reproductionSteps = getReproductionSteps()
-		url = getEnvironmentUrl()
+		url = getEnvironmentURL()
 	}
 
 	ticketUrls := getResolvedTickets()
@@ -239,4 +271,6 @@ func main() {
 	log.Printf("%v", reproductionSteps)
 	log.Printf("%v", url)
 	log.Printf("%v", ticketUrls)
+
+	formatPr(conventionalType, title, description, reproductionSteps, url, ticketUrls)
 }
