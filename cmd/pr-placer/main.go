@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/manifoldco/promptui"
-	"github.com/tcnksm/go-input"
 	"log"
 	"os"
 )
@@ -105,20 +104,13 @@ func getInternalChangeType() string {
 }
 
 func getTitle() string {
-	ui := &input.UI{}
-	query := "What's the one-sentence title of the change?"
-	name, err := ui.Ask(query, &input.Options{
-		HideOrder: true,
-		Loop:      true,
-		Required:  true,
-	})
-
-	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
+	title := ""
+	prompt := &survey.Input{
+		Message: "What's the one-sentence title of the change?",
 	}
+	survey.AskOne(prompt, &title, survey.WithValidator(survey.Required))
 
-	return name
+	return title
 }
 
 func getDescription() string {
