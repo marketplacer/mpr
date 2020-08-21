@@ -3,9 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/manifoldco/promptui"
-	"log"
-	"os"
 )
 
 type option struct {
@@ -19,19 +16,14 @@ func selectFromOptions(question string, options []option) string {
 		optionValues[i] = opt.value
 	}
 
-	prompt := promptui.Select{
-		Label: question,
-		Items: optionValues,
+	var answer int
+	prompt := &survey.Select{
+		Message: question,
+		Options: optionValues,
 	}
+	survey.AskOne(prompt, &answer)
 
-	i, _, err := prompt.Run()
-
-	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-	}
-
-	return options[i].key
+	return options[answer].key
 }
 
 func getChangeType() string {
@@ -124,22 +116,17 @@ func getDescription() string {
 }
 
 func checkQaRequired() bool {
-	prompt := promptui.Select{
-		Label: "Does this work require QA?",
-		Items: []string{
+	var answer int
+	prompt := &survey.Select{
+		Message: "Does this work require QA?",
+		Options: []string{
 			"No",
 			"Yes",
 		},
 	}
+	survey.AskOne(prompt, &answer)
 
-	i, _, err := prompt.Run()
-
-	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-	}
-
-	return i == 1
+	return answer == 1
 }
 
 func getReproductionSteps() []string {
