@@ -4,4 +4,11 @@ tagFormat: '${version}'
 plugins:
   - '@semantic-release/commit-analyzer'
   - '@semantic-release/release-notes-generator'
-  - '@semantic-release/github'
+  - - '@semantic-release/github'
+    - assets:
+        - path: bin/mpr-macos-amd64
+          label: Binary - macOS AMD64
+        - path: bin/mpr-linux-amd64
+          label: Binary - Linux AMD64
+        - path: bin/mpr-amd64.exe
+          label: Binary - Windows AMD64
