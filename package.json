@@ -1,0 +1,29 @@
+{
+  "name": "mpr",
+  "version": "1.0.0",
+  "description": "A thing for making PR text",
+  "scripts": {
+    "lint:commits:branch": "commitlint --from origin/master --to HEAD --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marketplacer/mpr.git"
+  },
+  "author": "Marketplacer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marketplacer/mpr/issues"
+  },
+  "homepage": "https://github.com/marketplacer/mpr#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "husky": "^4.2.5",
+    "semantic-release": "^17.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
